@@ -1,10 +1,10 @@
-apple, egg
-milk, cheese, bread, sugar
-egg, bread, sugar
+apple,egg
+milk,cheese,bread,sugar
+egg,bread,sugar
 sugar
-apple, cheese, bread
-milk, cheese, bread
-egg, sugar
-milk, bread
+apple,cheese,bread
+milk,cheese,bread
+egg,sugar
+milk,bread
 cheese
-egg, milk, bread, sugar
+egg,milk,bread,sugar
