@@ -1,5 +1,6 @@
 def read_transactions():
-    with open(input("Enter filename: "), 'r') as input_file:
+    # with open(input("Enter filename: "), 'r') as input_file:
+    with open("basket.txt", 'r') as input_file:
         baskets = []
         for line in input_file:
             baskets.append(line.rstrip().split(','))
@@ -23,9 +24,7 @@ def calculate_support(transactions, catalog, threshold):
     return supports, supports_with_threshold
 
 
-def calculate_confidence(transactions, catalog, threshold):
-    confidences = []
-    confidences_with_threshold = []
+def get_occurrences(transactions, catalog, threshold):
     edited_catalog = catalog[1:]
     times_bought = 0
     times_bought_together = 0
@@ -43,17 +42,29 @@ def calculate_confidence(transactions, catalog, threshold):
                                 if edited_catalog[j] in subtransaction:
                                     times_bought_together += 1
                                     two_products_occurrences[
-                                        catalog[i] + '-to-' + edited_catalog[j]] = times_bought_together
+                                        catalog[i] + '-and-' + edited_catalog[j]] = times_bought_together
                         times_bought_together = 0
         edited_catalog = edited_catalog[1:]
         one_products_occurrences[catalog[i]] = times_bought
         times_bought = 0
 
-    return one_products_occurrences, two_products_occurrences
+    confidences, confidences_with_threshold = calculate_confidence(one_products_occurrences, two_products_occurrences,
+                                                                   threshold)
+    return confidences, confidences_with_threshold
 
 
-def calculate_lift():
-    pass
+def calculate_confidence(one_products_occurrences, two_products_occurrences, threshold):
+    confidences = {}
+    confidences_with_threshold = {}
+
+    for item in one_products_occurrences:
+        for two_items in two_products_occurrences:
+            if item in two_items:
+                confidence = two_products_occurrences.get(two_items) / one_products_occurrences.get(item)
+                if confidence > threshold:
+                    print(str(two_items) + " : " + "If " + str(item) + " is purchased first " + " = " + str(confidence))
+
+    return confidences, confidences_with_threshold
 
 
 def get_all_items(transactions):
@@ -76,10 +87,10 @@ def main():
     support, supports_with_threshold = calculate_support(transactions, catalog, .5)
     print(support)
     print(supports_with_threshold)
-    one, two = calculate_confidence(transactions, catalog, .5)
+    confidences, confidences_with_thresholds = get_occurrences(transactions, catalog, .5)
 
-    print(one)
-    print(two)
+    # print(confidences)
+    # print(confidences_with_thresholds)
 
 
 main()
