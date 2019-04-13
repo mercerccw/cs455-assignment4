@@ -1,6 +1,5 @@
 def read_transactions():
-    # with open(input("Enter filename: "), 'r') as input_file:
-    with open("basket.txt", 'r') as input_file:
+    with open(input("Enter filename: "), 'r') as input_file:
         baskets = []
         for line in input_file:
             baskets.append(line.rstrip().split(','))
@@ -62,7 +61,8 @@ def calculate_confidence(one_products_occurrences, two_products_occurrences, thr
             if item in two_items:
                 confidence = two_products_occurrences.get(two_items) / one_products_occurrences.get(item)
                 if confidence > threshold:
-                    print(str(two_items) + " : " + "If " + str(item) + " is purchased first " + " = " + str(confidence))
+                    print(str(two_items) + " : " + "If " + str(item) + " is purchased first " + " = " + str(
+                        confidence * 100) + "%")
 
     return confidences, confidences_with_threshold
 
@@ -80,17 +80,12 @@ def get_all_items(transactions):
 def main():
     transactions = read_transactions()
     catalog = get_all_items(transactions)
-    # support_threshold = float(input("Enter support threshold: "))
-    # confidence_threshold = float(input("Enter confidence threshold: "))
-    # calculate_support(support_threshold)
-    # calculate_confidence(confidence_threshold)
-    support, supports_with_threshold = calculate_support(transactions, catalog, .5)
-    print(support)
-    print(supports_with_threshold)
-    confidences, confidences_with_thresholds = get_occurrences(transactions, catalog, .5)
-
-    # print(confidences)
-    # print(confidences_with_thresholds)
+    support_threshold = float(input("Enter support threshold: "))
+    confidence_threshold = float(input("Enter confidence threshold: "))
+    print('-' * 20 + "\n Rules Discovered: \n")
+    calculate_support(transactions, catalog, support_threshold)
+    get_occurrences(transactions, catalog, confidence_threshold)
+    print('-' * 20)
 
 
 main()
